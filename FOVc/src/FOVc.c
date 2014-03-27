@@ -37,7 +37,7 @@ void RandDistMap_Offset(int mapSize_x, int mapSize_y)
 	Target.x = mt_drand() * mapSize_x;
 	Target.y = mt_drand() * mapSize_y;
 
-	distance = OffDistCube(Origin, Target);
+	distance = OffDistAx(Origin, Target);
 
 	if (DEBUG_HEX)
 		printf ("Offset (%d, %d) to (%d, %d) is %d hexes.\n", Origin.x, Origin.y,
@@ -72,7 +72,7 @@ void ScanDistMap_Offset(int mapSize_x, int mapSize_y)
 {
 	int distance = 0;
 	int x, y;
-	bool axial = false;
+	bool axial = true;
 
 	// Offset coordinate configuration
 	OffCoord Origin;
