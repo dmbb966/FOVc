@@ -12,6 +12,8 @@ void test_FOV2();
 void test_FOV3();
 void test_FOV4();
 void test_Azimuth();
+void test_Round();
+void test_Line();
 double calcSeconds (clock_t start, clock_t finish);
 
 clock_t startTest;
@@ -36,11 +38,11 @@ int main()
 	//test_LOS2();
 	//test_FOV1();
 	//test_FOV2();
-	test_FOV3();
-	test_FOV4();
+	//test_FOV3();
+	//test_FOV4();
 
-	//for (a = 0; a < 5; a++)
-	//	test_Azimuth();
+	for (a = 0; a < 5; a++)
+		test_Line();
 
 	return 0;
 }
@@ -102,7 +104,6 @@ void test_LOS2()
 void test_FOV1()
 {
 	int a;
-	int result;
 	OffCoord origin;
 	OffCoord target;
 
@@ -112,7 +113,7 @@ void test_FOV1()
 	{
 		origin = RandCoord_Off(X_RANGE, Y_RANGE);
 		target = RandCoord_Off(X_RANGE, Y_RANGE);
-		result = OffDistAx(origin, target);
+		OffDistAx(origin, target);
 	}
 	if (USE_TIMER) {
 		endTest = clock();
@@ -123,7 +124,6 @@ void test_FOV1()
 void test_FOV2()
 {
 	int a;
-	int result;
 	OffCoord origin;
 	OffCoord target;
 
@@ -133,7 +133,7 @@ void test_FOV2()
 	{
 		origin = RandCoord_Off(X_RANGE, Y_RANGE);
 		target = RandCoord_Off(X_RANGE, Y_RANGE);
-		result = OffDistAx(origin, target);
+		OffDistAx(origin, target);
 	}
 	if (USE_TIMER) {
 		endTest = clock();
@@ -144,20 +144,24 @@ void test_FOV2()
 void test_FOV3()
 {
 	int a;
-	OffCoord origin;
-	OffCoord target;
+	AxCoord origin;
+	AxCoord target;
+	int dummySS;
+	int dummyOKH;
 
-	printf ("TEST FIVE: Azimuth calculations between two iterated hexes using AzimuthOff\n");
+	printf ("TEST FIVE: Azimuth calculations between two iterated hexes using AzimuthAx\n");
 	if (USE_TIMER) startTest = clock();
 	for (a = 0; a < NUM_ITERATIONS; a++)
 	{
 		origin.x = a % X_RANGE;
 		origin.y = a % Y_RANGE;
+		dummySS = -origin.x - origin.y;
 
 		target.x = a % X_RANGE;
 		target.y = a % Y_RANGE;
+		dummyOKH = -target.x - target.y;
 
-		AzimuthOff(origin, target);
+		AzimuthAx(origin, target);
 	}
 	if (USE_TIMER) {
 		endTest = clock();
@@ -168,20 +172,22 @@ void test_FOV3()
 void test_FOV4()
 {
 	int a;
-	AxCoord origin;
-	AxCoord target;
+	CubeCoord origin;
+	CubeCoord target;
 
-	printf ("TEST SIX: Distance calculations between two iterated hexes using AzimuthAx\n");
+	printf ("TEST SIX: Distance calculations between two iterated hexes using AzimuthCube\n");
 	if (USE_TIMER) startTest = clock();
 	for (a = 0; a < NUM_ITERATIONS; a++)
 	{
 		origin.x = a % X_RANGE;
-		origin.y = a % Y_RANGE;
+		origin.z = a % Y_RANGE;
+		origin.y = -origin.x - origin.z;
 
 		target.x = a % X_RANGE;
-		target.y = a % Y_RANGE;
+		target.z = a % Y_RANGE;
+		target.y = -target.x - target.z;
 
-		AzimuthAx(origin, target);
+		AzimuthCube(origin, target);
 	}
 	if (USE_TIMER) {
 		endTest = clock();
@@ -212,6 +218,55 @@ void test_Azimuth()
 	//printf ("Axial: %0.3f\n", AzimuthAx(OffToAx(origin), OffToAx(target)));
 	printf ("Offset: %0.3f\n", AzimuthOff(origin, target));
 	//printf ("Cubic: %0.3f\n", AzimuthCube(OffToCube(origin), OffToCube(target)));
+}
 
 
+// Validates the hex rounding functions
+void test_Round()
+{
+	OffCoord origin;
+	FloatCoord conversion;
+	OffCoord result;
+
+	float x;
+	float y;
+
+	printf ("Enter Offset x: ");
+	scanf ("%d", &origin.x);
+	printf ("Enter Offset y: ");
+	scanf ("%d", &origin.y);
+
+	conversion = OffHexIs(origin);
+
+	printf ("Hex (%d, %d) is equivalent to (%0.3f, %0.3f) in coordinates.\n",
+			origin.x, origin.y, conversion.x, conversion.y);
+
+	printf ("Enter target x-float: ");
+	scanf ("%f", &x);
+	printf ("Enter target y-float: ");
+	scanf ("%f", &y);
+
+	result = OffHexAt(x, y);
+
+	printf ("Coordinates (%0.3f, %0.3f) is converted into offset hex (%d, %d)\n",
+			x, y, result.x, result.y);
+
+}
+
+void test_Line()
+{
+	OffCoord origin;
+	OffCoord target;
+
+	printf ("Enter Origin x: ");
+	scanf ("%d", &origin.x);
+	printf ("Enter Origin y: ");
+	scanf ("%d", &origin.y);
+
+	printf ("Enter target x: ");
+	scanf ("%d", &target.x);
+	printf ("Enter target y: ");
+	scanf ("%d", &target.y);
+
+	LOS_Calc(origin, target);
 }

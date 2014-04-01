@@ -3,7 +3,7 @@ Test cases for FOVc:
 Functions to test:
 [COMPLETED] Distance from hex to hex (offset, axial, cubic)
 [COMPLETED] Azimuth between two hexes (offset, axial, cubic)
-[TO DO]		Return list of hexes on a line between two hexes (offset, axial, cubic)
+[COMPLETED]	Return list of hexes on a line between two hexes (offset, axial, cubic)
 [TO DO]		Return list of hexes between two azimuths to a certain range
 [TO DO]		Display coordinates in offset (convert from axial, cubic)
 

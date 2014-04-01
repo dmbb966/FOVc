@@ -1,3 +1,5 @@
+#include <stdio.h>
+#include <stdlib.h>
 #include <math.h>
 
 #include "HexMath.h"
@@ -101,7 +103,6 @@ OffCoord CubeToOff (CubeCoord cube)
 	return output;
 }
 
-
 // ------------------- Azimuth calculations --------------------//
 
 // Calculates the normalized azimuth in degrees between two axial coordinates
@@ -112,6 +113,7 @@ float AzimuthAx (AxCoord origin, AxCoord target)
 	int deltaY = target.y - origin.y;
 
 	// Converts first to an absolute x/y coordinate system
+	// Algorithm from www.redblobgames.com/grids/hexagons
 	float x = sqrt(3) * (deltaX + (deltaY / 2.0));
 	float y = 1.5 * deltaY;
 
@@ -130,6 +132,7 @@ float AzimuthCube (CubeCoord origin, CubeCoord target)
 	int deltaY = target.z - origin.z;
 
 	// Converts first to an absolute x/y coordinate system
+	// Algorithm from www.redblobgames.com/grids/hexagons
 	float x = sqrt(3) * (deltaX + (deltaY / 2.0));
 	float y = 1.5 * deltaY;
 
@@ -149,12 +152,229 @@ float AzimuthOff (OffCoord origin, OffCoord target)
 	int deltaY = target.y - origin.y;
 
 	// Converts first to an absolute x/y coordinate system
+	// Algorithm from www.redblobgames.com/grids/hexagons
 	float x = sqrt(3) * (deltaX - 0.5 * (deltaY & 1));
 	float y = 1.5 * deltaY;
-
 
 	result = atan2f(x, -y) * (180 / M_PI);
 	if (result < 0) result += 360;
 
 	return result;
+}
+
+
+// ------------------- Rounding calculations --------------------//
+
+AxCoord RoundAx (float x, float y, float z)
+{
+	return CubeToAx(RoundCube(x, y, z));
+}
+
+// Given a cube coordinate, rounds each component to the nearest integer
+// and then makes adjustments to ensure x + y + z = 0.
+// Algorithm from www.redblobgames.com/grids/hexagons/
+CubeCoord RoundCube (float x, float y, float z)
+{
+	CubeCoord result;
+
+	result.x = round(x);
+	result.y = round(y);
+	result.z = round(z);
+
+	float dx = fabs(result.x - x);
+	float dy = fabs(result.y - y);
+	float dz = fabs(result.z - z);
+
+	if (dx > dy && dx > dz) result.x = -result.y - result.z;
+	else if (dy > dz) result.y = -result.x - result.z;
+	else result.z = -result.x - result.y;
+
+	return result;
+}
+
+OffCoord RoundOff (float x, float y, float z)
+{
+	return CubeToOff(RoundCube(x, y, z));
+}
+
+// ------------------- Finds coordinate at hex --------------------//
+
+
+// Find coordinate at a given hex
+FloatCoord AxHexIs (AxCoord in)
+{
+	FloatCoord result;
+
+	// Converts first to an absolute x/y coordinate system
+	// Algorithm from www.redblobgames.com/grids/hexagons
+	result.x = sqrt(3) * (in.x + (in.y / 2.0));
+	result.y = 1.5 * in.y;
+
+	return result;
+}
+
+FloatCoord CubeHexIs (CubeCoord in)
+{
+	AxCoord translate;
+
+	translate.x = in.x;
+	translate.y = in.z;
+
+	return AxHexIs(translate);
+}
+
+FloatCoord OffHexIs (OffCoord in)
+{
+	FloatCoord result;
+
+	// Converts first to an absolute x/y coordinate system
+	// Algorithm from www.redblobgames.com/grids/hexagons
+	result.x = sqrt(3) * (in.x - 0.5 * (in.y & 1));
+	result.y = 1.5 * in.y;
+
+	return result;
+}
+
+// ------------------- Finds hex at calculations --------------------//
+
+float CalcHexAtX (float x, float y)
+{
+	return (1.0/3.0) * sqrt(3) * x - (1.0/3.0 * y);
+}
+
+float CalcHexAtY (float y)
+{
+	return (2.0/3.0) * y;
+}
+
+// Find hex at a given coordinate
+AxCoord AxHexAt (float x, float y)
+{
+	float approxX = CalcHexAtX(x, y);
+	float approxZ = CalcHexAtY(y);
+	float approxY = -approxX - approxZ;
+
+	return RoundAx(approxX, approxY, approxZ);
+}
+
+CubeCoord CubeHexAt (float x, float y)
+{
+	float approxX = CalcHexAtX(x, y);
+	float approxZ = CalcHexAtY(y);
+	float approxY = -approxX - approxZ;
+
+	return RoundCube(approxX, approxY, approxZ);
+}
+OffCoord OffHexAt (float x, float y)
+{
+	float approxX = CalcHexAtX(x, y);
+	float approxZ = CalcHexAtY(y);
+	float approxY = -approxX - approxZ;
+
+	return RoundOff(approxX, approxY, approxZ);
+}
+
+// ------------------- Finds hex at calculations --------------------//
+
+void HexesBetweenAx (AxCoord origin, AxCoord target)
+{
+	int i;
+	int distance = AxDist(origin, target);
+
+	float dx;
+	float dy;
+	float progress;
+
+	float coordX;
+	float coordY;
+
+	OffCoord result;
+
+	FloatCoord originF = AxHexIs(origin);
+	FloatCoord targetF = AxHexIs(target);
+	dx = targetF.x - originF.x;
+	dy = targetF.y - originF.y;
+
+	// Interpolates at distance + 1 points along the line
+	for (i = 0; i <= distance; i++)
+	{
+		progress = (float)i / (float)distance;
+
+		coordX = (float)originF.x + dx * progress;
+		coordY = (float)originF.y + dy * progress;
+
+		result = OffHexAt(coordX, coordY);
+
+		printf ("Interpolating %d of %d: (%0.2f, %0.2f) is hex (%d, %d)\n",
+				i, distance, coordX, coordY, result.x, result.y);
+	}
+}
+
+void HexesBetweenCube (CubeCoord origin, CubeCoord target)
+{
+	int i;
+	int distance = CubeDist(origin, target);
+
+	float dx;
+	float dy;
+	float progress;
+
+	float coordX;
+	float coordY;
+
+	OffCoord result;
+
+	FloatCoord originF = CubeHexIs(origin);
+	FloatCoord targetF = CubeHexIs(target);
+	dx = targetF.x - originF.x;
+	dy = targetF.y - originF.y;
+
+	// Interpolates at distance + 1 points along the line
+	for (i = 0; i <= distance; i++)
+	{
+		progress = (float)i / (float)distance;
+
+		coordX = (float)originF.x + dx * progress;
+		coordY = (float)originF.y + dy * progress;
+
+		result = OffHexAt(coordX, coordY);
+
+		printf ("Interpolating %d of %d: (%0.2f, %0.2f) is hex (%d, %d)\n",
+				i, distance, coordX, coordY, result.x, result.y);
+	}
+}
+
+void HexesBetweenOff (OffCoord origin, OffCoord target)
+{
+	int i;
+	int distance = OffDistAx(origin, target);
+
+	float dx;
+	float dy;
+	float progress;
+
+	float coordX;
+	float coordY;
+
+	OffCoord result;
+
+	FloatCoord originF = OffHexIs(origin);
+	FloatCoord targetF = OffHexIs(target);
+	dx = targetF.x - originF.x;
+	dy = targetF.y - originF.y;
+
+	// Interpolates at distance + 1 points along the line
+	for (i = 0; i <= distance; i++)
+	{
+		progress = (float)i / (float)distance;
+
+		coordX = (float)originF.x + dx * progress;
+		coordY = (float)originF.y + dy * progress;
+
+		result = OffHexAt(coordX, coordY);
+
+		printf ("Interpolating %d of %d: (%0.2f, %0.2f) is hex (%d, %d)\n",
+				i, distance, coordX, coordY, result.x, result.y);
+	}
+
 }

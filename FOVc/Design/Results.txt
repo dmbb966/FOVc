@@ -7,3 +7,9 @@ AzimuthAx vs AzimuthOff
 Using iterator:
 6.39 seconds (AzimuthOff)
 6.16 seconds (AzimuthAx) - about 5% faster
+
+
+Using the modularized version (AxHexIs) for azimuth calculations versus the regular version for azimuth.
+
+AxHexIs: 6.53 seconds
+Standard: 6.35 seconds - about 3% less efficient.

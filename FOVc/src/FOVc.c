@@ -70,7 +70,6 @@ void RandDistMap_Cube(int mapSize_x, int mapSize_y)
 // Throws away results.  Uses the even-r offset hex coordinate system.
 void ScanDistMap_Offset(int mapSize_x, int mapSize_y)
 {
-	int distance = 0;
 	int x, y;
 	bool axial = true;
 
@@ -86,8 +85,8 @@ void ScanDistMap_Offset(int mapSize_x, int mapSize_y)
 			// Offset coordination configuration
 			Target.x = x;
 			Target.y = y;
-			if (axial) distance = OffDistAx(Origin, Target);
-			else distance = OffDistCube(Origin, Target);
+			if (axial) OffDistAx(Origin, Target);
+			else OffDistCube(Origin, Target);
 		}
 }
 
@@ -96,7 +95,6 @@ void ScanDistMap_Offset(int mapSize_x, int mapSize_y)
 void ScanDistMap_Cube(int mapSize_x, int mapSize_y)
 {
 
-	int distance = 0;
 	int x, y;
 
 	// Cube coordinate configuration
@@ -113,7 +111,7 @@ void ScanDistMap_Cube(int mapSize_x, int mapSize_y)
 			Target.x = x;
 			Target.y = y;
 			Target.z = -x - y;
-			distance = CubeDist(Origin, Target);
+			CubeDist(Origin, Target);
 		}
 }
 
@@ -148,11 +146,14 @@ CubeCoord RandCoord_Cube(int x_range, int y_range)
 void LOS_Calc(OffCoord origin, OffCoord target)
 {
 	int distance = OffDistAx(origin, target);
-	//float azimuth = Azimuth
+	float azimuth = AzimuthOff(origin, target);
 
-	if (DEBUG_HEX)
-		printf ("Distance between (%d, %d) and (%d, %d) using OffDistAx is %d.\n",
-				origin.x, origin.y, target.x, target.y, distance);
+
+	printf ("Distance between (%d, %d) and (%d, %d) using OffDistAx is %d.\n",
+			origin.x, origin.y, target.x, target.y, distance);
+	printf ("Azimuth between the hexes is: %0.2f degrees.\n", azimuth);
+
+	HexesBetweenOff(origin, target);
 
 
 }
