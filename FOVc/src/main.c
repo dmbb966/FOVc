@@ -7,6 +7,7 @@
 void base();
 void test_LOS1();
 void test_LOS2();
+void test_LOS3();
 void test_FOV1();
 void test_FOV2();
 void test_FOV3();
@@ -22,7 +23,7 @@ clock_t timePassed;
 double seconds;
 const bool USE_TIMER = true;		// Calculates time to run each test case
 
-const int NUM_ITERATIONS = 10000 * 10000;	// Number of times the test function is run
+const int NUM_ITERATIONS = 10000 * 400;// * 100;	// Number of times the test function is run
 									// within the test case
 const int X_RANGE = 1000;			// Horizontal map size, from 0 to X_RANGE
 const int Y_RANGE = 1000;			// Vertical map size, from 0 to Y_RANGE
@@ -34,15 +35,16 @@ int main()
 	mt_seed32new(mt_seed());
 
 	//base();
-	//test_LOS1();
-	//test_LOS2();
+	test_LOS1();
+	test_LOS2();
+	test_LOS3();
 	//test_FOV1();
 	//test_FOV2();
 	//test_FOV3();
 	//test_FOV4();
 
-	for (a = 0; a < 5; a++)
-		test_Line();
+	//for (a = 0; a < 5; a++)
+	//	test_Line();
 
 	return 0;
 }
@@ -70,13 +72,32 @@ void test_LOS1()
 {
 	int i;
 
-	printf ("TEST ONE: Line of Sight calculations between two random points\n");
-	printf ("Intended to test performance diff between offset and axial coordinates.\n");
+	OffCoord origin;
+	OffCoord target;
+
+	printf ("TEST ONE: Line of Sight calculations between two iterated points\n");
+	printf ("Uses offset coordinates.\n");
 
 	if (USE_TIMER) startTest = clock();
 
 	for (i = 0; i < NUM_ITERATIONS; i++)
-		LOS_Calc(RandCoord_Off(X_RANGE, Y_RANGE), RandCoord_Off(X_RANGE, Y_RANGE));
+	{
+		//origin = RandCoord_Off(X_RANGE, Y_RANGE);
+		//target = RandCoord_Off(X_RANGE, Y_RANGE);
+
+		// Equalizer function
+		//OffToCube(origin);
+		//OffToCube(target);
+
+		origin.x = i % X_RANGE;
+		origin.y = i % Y_RANGE;
+
+		target.x = i % X_RANGE;
+		target.y = i % Y_RANGE;
+
+		LOS_CalcOff(origin, target);
+	}
+
 
 	if (USE_TIMER) {
 		endTest = clock();
@@ -88,16 +109,68 @@ void test_LOS1()
 // between the two (distance, azimuth, list of hexes along that azimuth)
 void test_LOS2()
 {
-	printf ("TEST TWO: Line of Sight calculations between two random points\n");
-	printf ("Intended to test performance diff between offset and cubic coordinates.\n");
+	AxCoord origin;
+	AxCoord target;
+
+	int i;
+
+	printf ("TEST TWO: Line of Sight calculations between two iterated points\n");
+	printf ("Uses axial coordinates.\n");
 	if (USE_TIMER) startTest = clock();
-	ScanDistMap_Offset(10000, 10000);
+
+	for (i = 0; i < NUM_ITERATIONS; i++)
+	{
+
+		origin.x = i % X_RANGE;
+		origin.y = i % Y_RANGE;
+
+		target.x = i % X_RANGE;
+		target.y = i % Y_RANGE;
+
+		//origin = RandCoord_Ax(X_RANGE, Y_RANGE);
+		//target = RandCoord_Ax(X_RANGE, Y_RANGE);
+
+		LOS_CalcAx(origin, target);
+	}
+
 	if (USE_TIMER) {
 		endTest = clock();
 		printf ("Test two completed in %0.2f seconds.\n", calcSeconds (startTest, endTest));
 	} else printf ("Test one completed.\n");
 }
 
+void test_LOS3()
+{
+	CubeCoord origin;
+	CubeCoord target;
+
+	int i;
+
+	printf ("TEST THREE: Line of Sight calculations between two iterated points\n");
+	printf ("Uses cubic coordinates.\n");
+	if (USE_TIMER) startTest = clock();
+
+	for (i = 0; i < NUM_ITERATIONS; i++)
+	{
+		origin.x = i % X_RANGE;
+		origin.z = i % Y_RANGE;
+		origin.y = -origin.x - origin.z;
+
+		target.x = i % X_RANGE;
+		target.z = i % Y_RANGE;
+		target.y = -target.x - target.z;
+
+		// origin = RandCoord_Cube(X_RANGE, Y_RANGE);
+		// target = RandCoord_Cube(X_RANGE, Y_RANGE);
+
+		LOS_CalcCube(origin, target);
+	}
+
+	if (USE_TIMER) {
+		endTest = clock();
+		printf ("Test three completed in %0.2f seconds.\n", calcSeconds (startTest, endTest));
+	} else printf ("Test three completed.\n");
+}
 
 
 
@@ -268,5 +341,5 @@ void test_Line()
 	printf ("Enter target y: ");
 	scanf ("%d", &target.y);
 
-	LOS_Calc(origin, target);
+	//LOS_Calc(origin, target);
 }

@@ -13,3 +13,23 @@ Using the modularized version (AxHexIs) for azimuth calculations versus the regu
 
 AxHexIs: 6.53 seconds
 Standard: 6.35 seconds - about 3% less efficient.
+
+
+LOS Calc: (10000 * 20 calculations)
+Offset Hexes: 8.83 / 8.82 seconds
+
+Comparison with Axial Coordinates (10000 * 20 calculations, with equalizer function)
+Offset: 8.88 / 8.90 / 8.89 seconds
+Axial:  8.80 / 8.78 / 8.82 seconds
+
+Iterated (10000 * 400 runs)
+Offset: 8.12 / 8.16 / 8.14 seconds
+Axial:  7.96 / 7.97 / 7.96 seconds
+
+Comparison with Cubic Coordinates (10000 * 20 calculations, with equalizer function)
+Offset: 8.85 / 8.89 / 8.85 seconds
+Cubic:  8.83 / 8.86 / 8.90 seconds
+
+Iterated (10000 * 400 runs)
+Offset: 8.12 / 8.16 / 8.14 seconds
+Cubic:  8.03 / 7.99 / 8.01 seconds

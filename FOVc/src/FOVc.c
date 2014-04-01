@@ -143,17 +143,29 @@ CubeCoord RandCoord_Cube(int x_range, int y_range)
 // Calculates the LOS between the origin and target coordinates
 // Includes range and azimuth calculations, also determines
 // a list of hexes along that azimuth.
-void LOS_Calc(OffCoord origin, OffCoord target)
+void LOS_CalcOff(OffCoord origin, OffCoord target)
 {
 	int distance = OffDistAx(origin, target);
 	float azimuth = AzimuthOff(origin, target);
 
 
-	printf ("Distance between (%d, %d) and (%d, %d) using OffDistAx is %d.\n",
-			origin.x, origin.y, target.x, target.y, distance);
-	printf ("Azimuth between the hexes is: %0.2f degrees.\n", azimuth);
+	//printf ("Distance between (%d, %d) and (%d, %d) using OffDistAx is %d.\n",
+	//		origin.x, origin.y, target.x, target.y, distance);
+	//printf ("Azimuth between the hexes is: %0.2f degrees.\n", azimuth);
 
 	HexesBetweenOff(origin, target);
+}
 
+void LOS_CalcAx(AxCoord origin, AxCoord target)
+{
+	int distance = AxDist(origin, target);
+	float azimuth = AzimuthAx(origin, target);
+	HexesBetweenAx(origin, target);
+}
 
+void LOS_CalcCube(CubeCoord origin, CubeCoord target)
+{
+	int distance = CubeDist(origin, target);
+	float azimuth = AzimuthCube(origin, target);
+	HexesBetweenCube(origin, target);
 }

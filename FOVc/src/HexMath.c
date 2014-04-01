@@ -305,8 +305,8 @@ void HexesBetweenAx (AxCoord origin, AxCoord target)
 
 		result = OffHexAt(coordX, coordY);
 
-		printf ("Interpolating %d of %d: (%0.2f, %0.2f) is hex (%d, %d)\n",
-				i, distance, coordX, coordY, result.x, result.y);
+		//printf ("Interpolating %d of %d: (%0.2f, %0.2f) is hex (%d, %d)\n",
+		//		i, distance, coordX, coordY, result.x, result.y);
 	}
 }
 
@@ -339,8 +339,8 @@ void HexesBetweenCube (CubeCoord origin, CubeCoord target)
 
 		result = OffHexAt(coordX, coordY);
 
-		printf ("Interpolating %d of %d: (%0.2f, %0.2f) is hex (%d, %d)\n",
-				i, distance, coordX, coordY, result.x, result.y);
+		//printf ("Interpolating %d of %d: (%0.2f, %0.2f) is hex (%d, %d)\n",
+		//		i, distance, coordX, coordY, result.x, result.y);
 	}
 }
 
@@ -373,8 +373,8 @@ void HexesBetweenOff (OffCoord origin, OffCoord target)
 
 		result = OffHexAt(coordX, coordY);
 
-		printf ("Interpolating %d of %d: (%0.2f, %0.2f) is hex (%d, %d)\n",
-				i, distance, coordX, coordY, result.x, result.y);
+		//printf ("Interpolating %d of %d: (%0.2f, %0.2f) is hex (%d, %d)\n",
+		//		i, distance, coordX, coordY, result.x, result.y);
 	}
 
 }
