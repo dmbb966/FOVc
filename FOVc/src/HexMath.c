@@ -1,10 +1,14 @@
+#include <math.h>
+
 #include "HexMath.h"
+
 
 int OffDistCube (OffCoord origin, OffCoord target)
 {
 	return CubeDist(OffToCube(origin), OffToCube(target));
 }
 
+// This is about 8% more efficient than OffDistCube
 int OffDistAx (OffCoord origin, OffCoord target)
 {
 	return AxDist(OffToAx(origin), OffToAx(target));
@@ -37,7 +41,7 @@ AxCoord OffToAx (OffCoord off)
 {
 	AxCoord output;
 	output.y = off.y;
-	output.x = off.x - (off.y + (off.y & 1)) / 2;
+	output.x = off.x - (off.y + (off.y & 1)) / 2.0;
 
 	return output;
 }
@@ -69,7 +73,7 @@ CubeCoord AxToCube (AxCoord ax)
 CubeCoord OffToCube (OffCoord off)
 {
 	CubeCoord output;
-	output.x = off.x - (off.y + (off.y & 1)) / 2;
+	output.x = off.x - (off.y + (off.y & 1)) / 2.0;
 	output.z = off.y;
 	output.y = -output.x -output.z;
 
@@ -81,7 +85,7 @@ OffCoord AxToOff (AxCoord ax)
 {
 	OffCoord output;
 	output.y = ax.y;
-	output.x = ax.x + (ax.y + (ax.y & 1)) / 2;
+	output.x = ax.x + (ax.y + (ax.y & 1)) / 2.0;
 
 	return output;
 }
@@ -91,8 +95,66 @@ OffCoord AxToOff (AxCoord ax)
 OffCoord CubeToOff (CubeCoord cube)
 {
 	OffCoord output;
-	output.x = cube.x + (cube.z + (cube.z & 1)) / 2;
+	output.x = cube.x + (cube.z + (cube.z & 1)) / 2.0;
 	output.y = cube.z;
 
 	return output;
+}
+
+
+// ------------------- Azimuth calculations --------------------//
+
+// Calculates the normalized azimuth in degrees between two axial coordinates
+float AzimuthAx (AxCoord origin, AxCoord target)
+{
+	float result;
+	int deltaX = target.x - origin.x;
+	int deltaY = target.y - origin.y;
+
+	// Converts first to an absolute x/y coordinate system
+	float x = sqrt(3) * (deltaX + (deltaY / 2.0));
+	float y = 1.5 * deltaY;
+
+
+	result = atan2f(x, -y) * (180 / M_PI);
+	if (result < 0) result += 360;
+
+	return result;
+}
+
+// Calculates the normalized azimuth in degrees between two cubic coordinates
+float AzimuthCube (CubeCoord origin, CubeCoord target)
+{
+	float result;
+	int deltaX = target.x - origin.x;
+	int deltaY = target.z - origin.z;
+
+	// Converts first to an absolute x/y coordinate system
+	float x = sqrt(3) * (deltaX + (deltaY / 2.0));
+	float y = 1.5 * deltaY;
+
+
+	result = atan2f(x, -y) * (180 / M_PI);
+	if (result < 0) result += 360;
+
+	return result;
+}
+
+// Calculates the normalized azimuth in degrees between two offset coordinates
+// Uses the even-r offset
+float AzimuthOff (OffCoord origin, OffCoord target)
+{
+	float result;
+	int deltaX = target.x - origin.x;
+	int deltaY = target.y - origin.y;
+
+	// Converts first to an absolute x/y coordinate system
+	float x = sqrt(3) * (deltaX - 0.5 * (deltaY & 1));
+	float y = 1.5 * deltaY;
+
+
+	result = atan2f(x, -y) * (180 / M_PI);
+	if (result < 0) result += 360;
+
+	return result;
 }

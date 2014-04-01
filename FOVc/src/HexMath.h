@@ -36,5 +36,11 @@ CubeCoord OffToCube (OffCoord off);
 OffCoord AxToOff (AxCoord ax);
 OffCoord CubeToOff (CubeCoord cube);
 
+// Azimuth calculations
+float AzimuthAx (AxCoord origin, AxCoord target);
+float AzimuthCube (CubeCoord origin, CubeCoord target);
+float AzimuthOff (OffCoord origin, OffCoord target);
+
+
 
 #endif /* HEXMATH_H_ */

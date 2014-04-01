@@ -1,0 +1,41 @@
+Test cases for FOVc:
+
+Functions to test:
+[COMPLETED] Distance from hex to hex (offset, axial, cubic)
+[COMPLETED] Azimuth between two hexes (offset, axial, cubic)
+[TO DO]		Return list of hexes on a line between two hexes (offset, axial, cubic)
+[TO DO]		Return list of hexes between two azimuths to a certain range
+[TO DO]		Display coordinates in offset (convert from axial, cubic)
+
+
+How to test:
+
+- Generate random numbers, pass into function for LOS Calculation
+	* Layer 1 (test case function)
+	  - Generate random number pair
+	  - Call LOS Calc
+	  	** Layer 2 (LOS Calc) 	
+	  	   - (L3) Distance between two hexes  <--- here is where the implementation changes!
+	  	   - (L3) Azimuth between two hexes
+	  	   - (L3) Hex list between two hexes
+	  	   - (L3) Display Information (convert to Offset as needed)
+	  	   
+ << This should ensure that ProfDiff will determine at the base function level (L3),
+    and the composite LOS Calc level (L2) what the performance differences are.
+    L1 is "compromised" because you generate random numbers therein. >>
+    *** To differentiate between offset, axial, and cubic representations,
+        have TWO test case functions, both differing from the default (offset) ***
+    
+     
+- Return list of hexes between two azimuths from an origin
+	* Layer 1 (test case function)
+	  - Scans an array of FOVs
+	  - Calls FOV Calc
+		** Layer 2 (FOV Calc)
+			- (L3) Arc Calc
+			- (L3) LOS Calc (which LOS Calc is called depends on which test case)
+			
+<< Methods: LOS Calc from origin to each one of the outer rim hexes, updating
+  some sort of data structure (hash table?) which is the total number of hexes
+  "lit up" - you can do a static 2D array in this case, since in reality with
+  object oriented code you'd just be updating a flag on a Hex object >>

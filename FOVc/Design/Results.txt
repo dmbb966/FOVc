@@ -1,0 +1,9 @@
+OffDistAx vs OffDistCube (calculates the distance between two offset coordinate pairs converting to Axial or Cubic, respectively)
+- WITH random number generation, OffDistAx takes 8.37s to run (10000^2 iterations) compared to 8.59s for OffDistCube (best case)
+ - due to randomness, performance sometimes is equivalent.
+- WITHOUT random number generation, OffDistAx takes 3.14s to run versus 3.39 seconds, about 8% faster
+
+AzimuthAx vs AzimuthOff 
+Using iterator:
+6.39 seconds (AzimuthOff)
+6.16 seconds (AzimuthAx) - about 5% faster

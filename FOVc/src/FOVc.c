@@ -116,3 +116,43 @@ void ScanDistMap_Cube(int mapSize_x, int mapSize_y)
 			distance = CubeDist(Origin, Target);
 		}
 }
+
+// Generates a random offset coordinate pair within an ([0, x], [0, y]) range
+OffCoord RandCoord_Off(int x_range, int y_range)
+{
+	OffCoord result;
+	result.x = mt_drand() * x_range;
+	result.y = mt_drand() * y_range;
+
+	return result;
+}
+
+// Generates a random axial coordinate pair within an ([0, x], [0, y]) range
+// Range is given in offset coordinates, function will convert internally
+AxCoord RandCoord_Ax(int x_range, int y_range)
+{
+	return OffToAx(RandCoord_Off(x_range, y_range));
+}
+
+// Generates a random cubic coordinate pair within an ([0, x], [0, y]) range
+// Range is given in offset coordinates, function will convert internally
+CubeCoord RandCoord_Cube(int x_range, int y_range)
+{
+	return OffToCube(RandCoord_Off(x_range, y_range));
+}
+
+
+// Calculates the LOS between the origin and target coordinates
+// Includes range and azimuth calculations, also determines
+// a list of hexes along that azimuth.
+void LOS_Calc(OffCoord origin, OffCoord target)
+{
+	int distance = OffDistAx(origin, target);
+	//float azimuth = Azimuth
+
+	if (DEBUG_HEX)
+		printf ("Distance between (%d, %d) and (%d, %d) using OffDistAx is %d.\n",
+				origin.x, origin.y, target.x, target.y, distance);
+
+
+}
