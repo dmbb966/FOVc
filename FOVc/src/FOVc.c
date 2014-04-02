@@ -143,29 +143,86 @@ CubeCoord RandCoord_Cube(int x_range, int y_range)
 // Calculates the LOS between the origin and target coordinates
 // Includes range and azimuth calculations, also determines
 // a list of hexes along that azimuth.
+
 void LOS_CalcOff(OffCoord origin, OffCoord target)
 {
-	int distance = OffDistAx(origin, target);
-	float azimuth = AzimuthOff(origin, target);
-
-
-	//printf ("Distance between (%d, %d) and (%d, %d) using OffDistAx is %d.\n",
-	//		origin.x, origin.y, target.x, target.y, distance);
-	//printf ("Azimuth between the hexes is: %0.2f degrees.\n", azimuth);
+	OffDistAx(origin, target);
+	AzimuthOff(origin, target);
 
 	HexesBetweenOff(origin, target);
 }
 
 void LOS_CalcAx(AxCoord origin, AxCoord target)
 {
-	int distance = AxDist(origin, target);
-	float azimuth = AzimuthAx(origin, target);
+	AxDist(origin, target);
+	AzimuthAx(origin, target);
 	HexesBetweenAx(origin, target);
 }
 
 void LOS_CalcCube(CubeCoord origin, CubeCoord target)
 {
-	int distance = CubeDist(origin, target);
-	float azimuth = AzimuthCube(origin, target);
+	CubeDist(origin, target);
+	AzimuthCube(origin, target);
 	HexesBetweenCube(origin, target);
+}
+
+
+// ------------------ CHANGE BELOW HERE FOR DiffProf --------------------//
+
+void LOS_Calc(int x1, int y1, int x2, int y2)
+{
+	OffCoord origin;
+	OffCoord target;
+	//AxCoord origin;
+	//AxCoord target;
+
+	origin.x = x1;
+	origin.y = y1;
+	target.x = x2;
+	target.y = y2;
+
+	LOS_CalcOff(origin, target);
+	//LOS_CalcAx(origin, target);
+}
+
+void Dist_Azimuth(int x1, int y1, int x2, int y2)
+{
+	OffCoord origin;
+	OffCoord target;
+	//AxCoord origin;
+	//AxCoord target;
+
+	origin.x = x1;
+	origin.y = y1;
+	target.x = x2;
+	target.y = y2;
+
+	OffDistAx(origin, target);
+	AzimuthOff(origin, target);
+
+	//AxDist(origin, target);
+	//AzimuthAx(origin, target);
+}
+
+void Display_Coord(int x1, int y1, int x2, int y2)
+{
+	OffCoord origin;
+	OffCoord target;
+	//AxCoord origin;
+	//AxCoord target;
+
+	OffCoord output1;
+	OffCoord output2;
+
+	origin.x = x1;
+	origin.y = y1;
+	target.x = x2;
+	target.y = y2;
+
+	output1 = origin;
+	output2 = target;
+	//output1 = AxToOff(origin);
+	//output2 = AxToOff(target);
+
+	//printf ("(%d, %d) to (%d, %d)\n", output1.x, output1.y, output2.x, output2.y);
 }

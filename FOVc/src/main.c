@@ -5,46 +5,33 @@
 #include "mtwist.h"
 
 void base();
-void test_LOS1();
-void test_LOS2();
-void test_LOS3();
-void test_FOV1();
-void test_FOV2();
-void test_FOV3();
-void test_FOV4();
-void test_Azimuth();
-void test_Round();
-void test_Line();
-double calcSeconds (clock_t start, clock_t finish);
+void test1();
+void test2();
+void test3();
+void test4();
 
+double calcSeconds (clock_t start, clock_t finish);
 clock_t startTest;
 clock_t endTest;
 clock_t timePassed;
 double seconds;
-const bool USE_TIMER = true;		// Calculates time to run each test case
+const bool USE_TIMER = false;		// Calculates time to run each test case
 
-const int NUM_ITERATIONS = 10000 * 400;// * 100;	// Number of times the test function is run
-									// within the test case
+
+const int NUM_ITERATIONS = 10000 * 400;// Number of times the test function is run
+									// when calculating LOS
 const int X_RANGE = 1000;			// Horizontal map size, from 0 to X_RANGE
 const int Y_RANGE = 1000;			// Vertical map size, from 0 to Y_RANGE
 
 int main()
 {
-	int a;
-
 	mt_seed32new(mt_seed());
 
-	//base();
-	test_LOS1();
-	test_LOS2();
-	test_LOS3();
-	//test_FOV1();
-	//test_FOV2();
-	//test_FOV3();
-	//test_FOV4();
-
-	//for (a = 0; a < 5; a++)
-	//	test_Line();
+	base();
+	test1();
+	test2();
+	test3();
+	test4();
 
 	return 0;
 }
@@ -56,69 +43,26 @@ void base()
 
 	if (USE_TIMER) startTest = clock();
 
+	printf ("Starting base function.\n");
+
 	for (base = 0; base < 1000000000; base++)
 		belongToUs += base;
 
 	if (USE_TIMER) {
 		endTest = clock();
 		printf ("Base function completed in %0.2f seconds.\n", calcSeconds (startTest, endTest));
-	} else printf ("Base function completed.\n");
+	} else printf ("Base function completed.\n\n");
 }
 
-
-// Generates random coordinate pairs and calculates LOS information
-// between the two (distance, azimuth, list of hexes along that azimuth)
-void test_LOS1()
+void test1()
 {
 	int i;
-
 	OffCoord origin;
 	OffCoord target;
 
 	printf ("TEST ONE: Line of Sight calculations between two iterated points\n");
-	printf ("Uses offset coordinates.\n");
 
-	if (USE_TIMER) startTest = clock();
-
-	for (i = 0; i < NUM_ITERATIONS; i++)
-	{
-		//origin = RandCoord_Off(X_RANGE, Y_RANGE);
-		//target = RandCoord_Off(X_RANGE, Y_RANGE);
-
-		// Equalizer function
-		//OffToCube(origin);
-		//OffToCube(target);
-
-		origin.x = i % X_RANGE;
-		origin.y = i % Y_RANGE;
-
-		target.x = i % X_RANGE;
-		target.y = i % Y_RANGE;
-
-		LOS_CalcOff(origin, target);
-	}
-
-
-	if (USE_TIMER) {
-		endTest = clock();
-		printf ("Test one completed in %0.2f seconds.\n", calcSeconds (startTest, endTest));
-	} else printf ("Test one completed.\n");
-}
-
-// Generates random coordinate pairs and calculates LOS information
-// between the two (distance, azimuth, list of hexes along that azimuth)
-void test_LOS2()
-{
-	AxCoord origin;
-	AxCoord target;
-
-	int i;
-
-	printf ("TEST TWO: Line of Sight calculations between two iterated points\n");
-	printf ("Uses axial coordinates.\n");
-	if (USE_TIMER) startTest = clock();
-
-	for (i = 0; i < NUM_ITERATIONS; i++)
+	for (i = 0; i < NUM_ITERATIONS * 10; i++)
 	{
 
 		origin.x = i % X_RANGE;
@@ -127,219 +71,73 @@ void test_LOS2()
 		target.x = i % X_RANGE;
 		target.y = i % Y_RANGE;
 
-		//origin = RandCoord_Ax(X_RANGE, Y_RANGE);
-		//target = RandCoord_Ax(X_RANGE, Y_RANGE);
-
-		LOS_CalcAx(origin, target);
+		LOS_Calc(origin.x, origin.y, target.x, target.y);
 	}
 
-	if (USE_TIMER) {
-		endTest = clock();
-		printf ("Test two completed in %0.2f seconds.\n", calcSeconds (startTest, endTest));
-	} else printf ("Test one completed.\n");
+	printf ("Test one complete.\n\n");
 }
 
-void test_LOS3()
+void test2()
 {
-	CubeCoord origin;
-	CubeCoord target;
-
 	int i;
-
-	printf ("TEST THREE: Line of Sight calculations between two iterated points\n");
-	printf ("Uses cubic coordinates.\n");
-	if (USE_TIMER) startTest = clock();
-
-	for (i = 0; i < NUM_ITERATIONS; i++)
-	{
-		origin.x = i % X_RANGE;
-		origin.z = i % Y_RANGE;
-		origin.y = -origin.x - origin.z;
-
-		target.x = i % X_RANGE;
-		target.z = i % Y_RANGE;
-		target.y = -target.x - target.z;
-
-		// origin = RandCoord_Cube(X_RANGE, Y_RANGE);
-		// target = RandCoord_Cube(X_RANGE, Y_RANGE);
-
-		LOS_CalcCube(origin, target);
-	}
-
-	if (USE_TIMER) {
-		endTest = clock();
-		printf ("Test three completed in %0.2f seconds.\n", calcSeconds (startTest, endTest));
-	} else printf ("Test three completed.\n");
-}
-
-
-
-void test_FOV1()
-{
-	int a;
 	OffCoord origin;
 	OffCoord target;
 
-	printf ("TEST THREE: Distance calculations between two random hexes using OffDistAx\n");
-	if (USE_TIMER) startTest = clock();
-	for (a = 0; a < NUM_ITERATIONS; a++)
+	printf ("TEST TWO: Line of Sight calculations between two random points\n");
+
+	for (i = 0; i < NUM_ITERATIONS / 10; i++)
 	{
+
 		origin = RandCoord_Off(X_RANGE, Y_RANGE);
 		target = RandCoord_Off(X_RANGE, Y_RANGE);
-		OffDistAx(origin, target);
+
+		LOS_Calc(origin.x, origin.y, target.x, target.y);
 	}
-	if (USE_TIMER) {
-		endTest = clock();
-		printf ("Test three completed in %0.2f seconds.\n", calcSeconds (startTest, endTest));
-	} else 	printf ("Test three completed.\n");
+
+	printf ("Test two complete.\n\n");
 }
 
-void test_FOV2()
+void test3()
 {
-	int a;
+	int i;
 	OffCoord origin;
 	OffCoord target;
 
-	printf ("TEST FOUR: Distance calculations between two random hexes using OffDistCube\n");
-	if (USE_TIMER) startTest = clock();
-	for (a = 0; a < NUM_ITERATIONS; a++)
+	printf ("TEST THREE: Only does distance and azimuth calculations between two random points.\n");
+
+	for (i = 0; i < NUM_ITERATIONS * 50; i++)
 	{
+
 		origin = RandCoord_Off(X_RANGE, Y_RANGE);
 		target = RandCoord_Off(X_RANGE, Y_RANGE);
-		OffDistAx(origin, target);
+
+		Dist_Azimuth(origin.x, origin.y, target.x, target.y);
 	}
-	if (USE_TIMER) {
-		endTest = clock();
-		printf ("Test four completed in %0.2f seconds.\n", calcSeconds (startTest, endTest));
-	} else 	printf ("Test four completed.\n");
+
+	printf ("Test three complete.\n\n");
 }
 
-void test_FOV3()
+void test4()
 {
-	int a;
-	AxCoord origin;
-	AxCoord target;
-	int dummySS;
-	int dummyOKH;
+	int i;
+	OffCoord origin;
+	OffCoord target;
 
-	printf ("TEST FIVE: Azimuth calculations between two iterated hexes using AzimuthAx\n");
-	if (USE_TIMER) startTest = clock();
-	for (a = 0; a < NUM_ITERATIONS; a++)
+	printf ("TEST FOUR: Prints random coordinates in even-r offset format.\n");
+
+	for (i = 0; i < NUM_ITERATIONS * 50; i++)
 	{
-		origin.x = a % X_RANGE;
-		origin.y = a % Y_RANGE;
-		dummySS = -origin.x - origin.y;
 
-		target.x = a % X_RANGE;
-		target.y = a % Y_RANGE;
-		dummyOKH = -target.x - target.y;
+		origin = RandCoord_Off(X_RANGE, Y_RANGE);
+		target = RandCoord_Off(X_RANGE, Y_RANGE);
 
-		AzimuthAx(origin, target);
+		Display_Coord(origin.x, origin.y, target.x, target.y);
 	}
-	if (USE_TIMER) {
-		endTest = clock();
-		printf ("Test five completed in %0.2f seconds.\n", calcSeconds (startTest, endTest));
-	} else 	printf ("Test five completed.\n");
-}
 
-void test_FOV4()
-{
-	int a;
-	CubeCoord origin;
-	CubeCoord target;
-
-	printf ("TEST SIX: Distance calculations between two iterated hexes using AzimuthCube\n");
-	if (USE_TIMER) startTest = clock();
-	for (a = 0; a < NUM_ITERATIONS; a++)
-	{
-		origin.x = a % X_RANGE;
-		origin.z = a % Y_RANGE;
-		origin.y = -origin.x - origin.z;
-
-		target.x = a % X_RANGE;
-		target.z = a % Y_RANGE;
-		target.y = -target.x - target.z;
-
-		AzimuthCube(origin, target);
-	}
-	if (USE_TIMER) {
-		endTest = clock();
-		printf ("Test six completed in %0.2f seconds.\n", calcSeconds (startTest, endTest));
-	} else 	printf ("Test six completed.\n");
+	printf ("Test four complete.\n\n");
 }
 
 double calcSeconds (clock_t start, clock_t finish)
 {
 	return (finish - start) / (double)(CLOCKS_PER_SEC);
-}
-
-void test_Azimuth()
-{
-	OffCoord origin;
-	OffCoord target;
-
-	printf ("Enter Origin x: ");
-	scanf ("%d", &origin.x);
-	printf ("Enter Origin y: ");
-	scanf ("%d", &origin.y);
-
-	printf ("Enter target x: ");
-	scanf ("%d", &target.x);
-	printf ("Enter target y: ");
-	scanf ("%d", &target.y);
-
-	//printf ("Axial: %0.3f\n", AzimuthAx(OffToAx(origin), OffToAx(target)));
-	printf ("Offset: %0.3f\n", AzimuthOff(origin, target));
-	//printf ("Cubic: %0.3f\n", AzimuthCube(OffToCube(origin), OffToCube(target)));
-}
-
-
-// Validates the hex rounding functions
-void test_Round()
-{
-	OffCoord origin;
-	FloatCoord conversion;
-	OffCoord result;
-
-	float x;
-	float y;
-
-	printf ("Enter Offset x: ");
-	scanf ("%d", &origin.x);
-	printf ("Enter Offset y: ");
-	scanf ("%d", &origin.y);
-
-	conversion = OffHexIs(origin);
-
-	printf ("Hex (%d, %d) is equivalent to (%0.3f, %0.3f) in coordinates.\n",
-			origin.x, origin.y, conversion.x, conversion.y);
-
-	printf ("Enter target x-float: ");
-	scanf ("%f", &x);
-	printf ("Enter target y-float: ");
-	scanf ("%f", &y);
-
-	result = OffHexAt(x, y);
-
-	printf ("Coordinates (%0.3f, %0.3f) is converted into offset hex (%d, %d)\n",
-			x, y, result.x, result.y);
-
-}
-
-void test_Line()
-{
-	OffCoord origin;
-	OffCoord target;
-
-	printf ("Enter Origin x: ");
-	scanf ("%d", &origin.x);
-	printf ("Enter Origin y: ");
-	scanf ("%d", &origin.y);
-
-	printf ("Enter target x: ");
-	scanf ("%d", &target.x);
-	printf ("Enter target y: ");
-	scanf ("%d", &target.y);
-
-	//LOS_Calc(origin, target);
 }
