@@ -167,7 +167,7 @@ void LOS_CalcCube(CubeCoord origin, CubeCoord target)
 }
 
 
-// ------------------ CHANGE BELOW HERE FOR DiffProf --------------------//
+// ------------------ CHANGE BELOW HERE FOR PerfDiff --------------------//
 
 void LOS_Calc(int x1, int y1, int x2, int y2)
 {
