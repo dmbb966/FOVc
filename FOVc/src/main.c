@@ -4,7 +4,7 @@
 #include "FOVc.h"
 #include "mtwist.h"
 
-// VERSION 1 - uses offset coordinates
+//  VERSION 1 - uses offset coordinates
 
 void base();
 void test1();
