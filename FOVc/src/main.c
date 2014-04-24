@@ -4,6 +4,8 @@
 #include "FOVc.h"
 #include "mtwist.h"
 
+// VERSION 1 - uses offset coordinates
+
 void base();
 void test1();
 void test2();
@@ -60,8 +62,8 @@ void base()
 void test1()
 {
 	int i;
-	AxCoord origin;
-	AxCoord target;
+	OffCoord origin;
+	OffCoord target;
 
 	if (USE_TIMER) startTest = clock();
 
@@ -88,8 +90,8 @@ void test1()
 void test2()
 {
 	int i;
-	AxCoord origin;
-	AxCoord target;
+	OffCoord origin;
+	OffCoord target;
 
 	if (USE_TIMER) startTest = clock();
 
@@ -98,8 +100,8 @@ void test2()
 	for (i = 0; i < NUM_ITERATIONS / 240; i++)
 	{
 
-		origin = RandCoord_Ax(X_RANGE, Y_RANGE);
-		target = RandCoord_Ax(X_RANGE, Y_RANGE);
+		origin = RandCoord_Off(X_RANGE, Y_RANGE);
+		target = RandCoord_Off(X_RANGE, Y_RANGE);
 
 		LOS_Calc(origin.x, origin.y, target.x, target.y);
 	}
@@ -113,8 +115,8 @@ void test2()
 void test3()
 {
 	int i;
-	AxCoord origin;
-	AxCoord target;
+	OffCoord origin;
+	OffCoord target;
 
 	if (USE_TIMER) startTest = clock();
 
@@ -123,8 +125,8 @@ void test3()
 	for (i = 0; i < NUM_ITERATIONS * 1.2; i++)
 	{
 
-		origin = RandCoord_Ax(X_RANGE, Y_RANGE);
-		target = RandCoord_Ax(X_RANGE, Y_RANGE);
+		origin = RandCoord_Off(X_RANGE, Y_RANGE);
+		target = RandCoord_Off(X_RANGE, Y_RANGE);
 
 		Dist_Azimuth(origin.x, origin.y, target.x, target.y);
 	}
@@ -138,8 +140,8 @@ void test3()
 void test4()
 {
 	int i;
-	AxCoord origin;
-	AxCoord target;
+	OffCoord origin;
+	OffCoord target;
 
 	if (USE_TIMER) startTest = clock();
 
@@ -148,8 +150,8 @@ void test4()
 	for (i = 0; i < NUM_ITERATIONS * 2.2; i++)
 	{
 
-		origin = RandCoord_Ax(X_RANGE, Y_RANGE);
-		target = RandCoord_Ax(X_RANGE, Y_RANGE);
+		origin = RandCoord_Off(X_RANGE, Y_RANGE);
+		target = RandCoord_Off(X_RANGE, Y_RANGE);
 
 		Display_Coord(origin.x, origin.y, target.x, target.y);
 	}
