@@ -22,15 +22,15 @@ AxCoord RandCoord_Ax(int x_range, int y_range);
 CubeCoord RandCoord_Cube(int x_range, int y_range);
 
 // Calculates LOS between the origin and target
-void LOS_Calc(int x1, int y1, int x2, int y2);
+void LOS_Calc(int x1, int y1, int z1, int x2, int y2, int z2);
 
 void LOS_CalcAx(AxCoord origin, AxCoord target);
 void LOS_CalcCube(CubeCoord origin, CubeCoord target);
 void LOS_CalcOff(OffCoord origin, OffCoord target);
 
 // Calculates the distance and azimuth between the origin and target
-void Dist_Azimuth(int x1, int y1, int x2, int y2);
+void Dist_Azimuth(int x1, int y1, int z1, int x2, int y2, int z2);
 
-void Display_Coord(int x1, int y1, int x2, int y2);
+void Display_Coord(int x1, int y1, int z1, int x2, int y2, int z2);
 
 #endif /* FOVC_H_ */

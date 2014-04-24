@@ -4,7 +4,7 @@
 #include "FOVc.h"
 #include "mtwist.h"
 
-//VERSION 1 - uses offset coordinates
+// VERSION 2 - uses cubic coordinates
 
 void base();
 void test1();
@@ -62,8 +62,8 @@ void base()
 void test1()
 {
 	int i;
-	OffCoord origin;
-	OffCoord target;
+	CubeCoord origin;
+	CubeCoord target;
 
 	if (USE_TIMER) startTest = clock();
 
@@ -74,11 +74,13 @@ void test1()
 
 		origin.x = i % X_RANGE;
 		origin.y = i % Y_RANGE;
+		origin.z = -origin.x - origin.y;
 
 		target.x = i % X_RANGE;
 		target.y = i % Y_RANGE;
+		target.z = -target.x - target.y;
 
-		LOS_Calc(origin.x, origin.y, target.x, target.y);
+		LOS_Calc(origin.x, origin.y, origin.z, target.x, target.y, target.z);
 	}
 
 	if (USE_TIMER) {
@@ -90,8 +92,8 @@ void test1()
 void test2()
 {
 	int i;
-	OffCoord origin;
-	OffCoord target;
+	CubeCoord origin;
+	CubeCoord target;
 
 	if (USE_TIMER) startTest = clock();
 
@@ -100,10 +102,10 @@ void test2()
 	for (i = 0; i < NUM_ITERATIONS / 240; i++)
 	{
 
-		origin = RandCoord_Off(X_RANGE, Y_RANGE);
-		target = RandCoord_Off(X_RANGE, Y_RANGE);
+		origin = RandCoord_Cube(X_RANGE, Y_RANGE);
+		target = RandCoord_Cube(X_RANGE, Y_RANGE);
 
-		LOS_Calc(origin.x, origin.y, target.x, target.y);
+		LOS_Calc(origin.x, origin.y, origin.z, target.x, target.y, target.z);
 	}
 
 	if (USE_TIMER) {
@@ -115,8 +117,8 @@ void test2()
 void test3()
 {
 	int i;
-	OffCoord origin;
-	OffCoord target;
+	CubeCoord origin;
+	CubeCoord target;
 
 	if (USE_TIMER) startTest = clock();
 
@@ -125,10 +127,10 @@ void test3()
 	for (i = 0; i < NUM_ITERATIONS * 1.2; i++)
 	{
 
-		origin = RandCoord_Off(X_RANGE, Y_RANGE);
-		target = RandCoord_Off(X_RANGE, Y_RANGE);
+		origin = RandCoord_Cube(X_RANGE, Y_RANGE);
+		target = RandCoord_Cube(X_RANGE, Y_RANGE);
 
-		Dist_Azimuth(origin.x, origin.y, target.x, target.y);
+		Dist_Azimuth(origin.x, origin.y, origin.z, target.x, target.y, target.z);
 	}
 
 	if (USE_TIMER) {
@@ -140,8 +142,8 @@ void test3()
 void test4()
 {
 	int i;
-	OffCoord origin;
-	OffCoord target;
+	CubeCoord origin;
+	CubeCoord target;
 
 	if (USE_TIMER) startTest = clock();
 
@@ -150,10 +152,10 @@ void test4()
 	for (i = 0; i < NUM_ITERATIONS * 2.2; i++)
 	{
 
-		origin = RandCoord_Off(X_RANGE, Y_RANGE);
-		target = RandCoord_Off(X_RANGE, Y_RANGE);
+		origin = RandCoord_Cube(X_RANGE, Y_RANGE);
+		target = RandCoord_Cube(X_RANGE, Y_RANGE);
 
-		Display_Coord(origin.x, origin.y, target.x, target.y);
+		Display_Coord(origin.x, origin.y, origin.z, target.x, target.y, target.z);
 	}
 
 	if (USE_TIMER) {

@@ -169,48 +169,55 @@ void LOS_CalcCube(CubeCoord origin, CubeCoord target)
 
 // ------------------ CHANGE BELOW HERE FOR PerfDiff --------------------//
 
-void LOS_Calc(int x1, int y1, int x2, int y2)
+void LOS_Calc(int x1, int y1, int z1, int x2, int y2, int z2)
 {
-	OffCoord origin;
-	OffCoord target;
+	CubeCoord origin;
+	CubeCoord target;
 
 	origin.x = x1;
 	origin.y = y1;
+	origin.z = z1;
 	target.x = x2;
 	target.y = y2;
+	target.z = z2;
 
-	LOS_CalcOff(origin, target);
+	LOS_CalcCube(origin, target);
 }
 
-void Dist_Azimuth(int x1, int y1, int x2, int y2)
+void Dist_Azimuth(int x1, int y1, int z1, int x2, int y2, int z2)
 {
-	OffCoord origin;
-	OffCoord target;
+	CubeCoord origin;
+	CubeCoord target;
 
 	origin.x = x1;
 	origin.y = y1;
+	origin.z = z1;
+
 	target.x = x2;
 	target.y = y2;
+	target.z = z2;
 
-	OffDistAx(origin, target);
-	AzimuthOff(origin, target);
+	CubeDist(origin, target);
+	AzimuthCube(origin, target);
 }
 
-void Display_Coord(int x1, int y1, int x2, int y2)
+void Display_Coord(int x1, int y1, int z1, int x2, int y2, int z2)
 {
-	OffCoord origin;
-	OffCoord target;
+	CubeCoord origin;
+	CubeCoord target;
 
 	OffCoord output1;
 	OffCoord output2;
 
 	origin.x = x1;
 	origin.y = y1;
+	origin.z = z1;
 	target.x = x2;
 	target.y = y2;
+	target.z = z2;
 
-	output1 = origin;
-	output2 = target;
+	output1 = CubeToOff(origin);
+	output2 = CubeToOff(target);
 
 	//printf ("(%d, %d) to (%d, %d)\n", output1.x, output1.y, output2.x, output2.y);
 }
