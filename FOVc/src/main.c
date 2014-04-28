@@ -20,10 +20,10 @@ double seconds;
 const bool USE_TIMER = true;		// Calculates time to run each test case
 
 
-const int NUM_ITERATIONS = 10000 * 4000;// Number of times the test function is run
+const int NUM_ITERATIONS = 10000;// Number of times the test function is run
 									   // when calculating LOS
 const int X_RANGE = 1000;			// Horizontal map size, from 0 to X_RANGE
-const int Y_RANGE = 1000;			// Vertical map size, from 0 to Y_RANGE
+const int Y_RANGE = 100;			// Vertical map size, from 0 to Y_RANGE
 
 int main()
 {
@@ -47,7 +47,7 @@ void base()
 
 	printf ("Starting base function.\n");
 
-	for (belongToUs = 0; belongToUs < NUM_ITERATIONS; belongToUs++)
+	for (belongToUs = 0; belongToUs < NUM_ITERATIONS * 4000; belongToUs++)
 	{
 		for (base = 0; base < 300000000; base++)
 			belongToUs += base;
@@ -62,26 +62,13 @@ void base()
 void test1()
 {
 	int i;
-	CubeCoord origin;
-	CubeCoord target;
 
 	if (USE_TIMER) startTest = clock();
 
 	printf ("TEST ONE: Line of Sight calculations between two iterated points\n");
 
-	for (i = 0; i < NUM_ITERATIONS * 0.9; i++)
-	{
-
-		origin.x = i % X_RANGE;
-		origin.y = i % Y_RANGE;
-		origin.z = -origin.x - origin.y;
-
-		target.x = i % X_RANGE;
-		target.y = i % Y_RANGE;
-		target.z = -target.x - target.y;
-
-		LOS_Calc(origin.x, origin.y, origin.z, target.x, target.y, target.z);
-	}
+	for (i = 0; i < NUM_ITERATIONS / 4000; i++)
+		ScanLOSCalc(X_RANGE, Y_RANGE);
 
 	if (USE_TIMER) {
 		endTest = clock();
@@ -92,21 +79,13 @@ void test1()
 void test2()
 {
 	int i;
-	CubeCoord origin;
-	CubeCoord target;
 
 	if (USE_TIMER) startTest = clock();
 
 	printf ("TEST TWO: Line of Sight calculations between two random points\n");
 
-	for (i = 0; i < NUM_ITERATIONS / 240; i++)
-	{
-
-		origin = RandCoord_Cube(X_RANGE, Y_RANGE);
-		target = RandCoord_Cube(X_RANGE, Y_RANGE);
-
-		LOS_Calc(origin.x, origin.y, origin.z, target.x, target.y, target.z);
-	}
+	for (i = 0; i < NUM_ITERATIONS / 4000; i++)
+		RandLOSCalc(X_RANGE, Y_RANGE, X_RANGE * Y_RANGE);
 
 	if (USE_TIMER) {
 			endTest = clock();
@@ -117,21 +96,13 @@ void test2()
 void test3()
 {
 	int i;
-	CubeCoord origin;
-	CubeCoord target;
 
 	if (USE_TIMER) startTest = clock();
 
 	printf ("TEST THREE: Only does distance and azimuth calculations between two random points.\n");
 
-	for (i = 0; i < NUM_ITERATIONS * 1.2; i++)
-	{
-
-		origin = RandCoord_Cube(X_RANGE, Y_RANGE);
-		target = RandCoord_Cube(X_RANGE, Y_RANGE);
-
-		Dist_Azimuth(origin.x, origin.y, origin.z, target.x, target.y, target.z);
-	}
+	for (i = 0; i < NUM_ITERATIONS / 12; i++)
+		RandLOSCalcMin(X_RANGE, Y_RANGE, X_RANGE * Y_RANGE);
 
 	if (USE_TIMER) {
 			endTest = clock();
@@ -142,21 +113,13 @@ void test3()
 void test4()
 {
 	int i;
-	CubeCoord origin;
-	CubeCoord target;
 
 	if (USE_TIMER) startTest = clock();
 
 	printf ("TEST FOUR: Prints random coordinates in even-r offset format.\n");
 
-	for (i = 0; i < NUM_ITERATIONS * 2.2; i++)
-	{
-
-		origin = RandCoord_Cube(X_RANGE, Y_RANGE);
-		target = RandCoord_Cube(X_RANGE, Y_RANGE);
-
-		Display_Coord(origin.x, origin.y, origin.z, target.x, target.y, target.z);
-	}
+	for (i = 0; i < NUM_ITERATIONS / 4; i++)
+		RandDisplayCoord(X_RANGE, Y_RANGE, X_RANGE * Y_RANGE);
 
 	if (USE_TIMER) {
 			endTest = clock();
