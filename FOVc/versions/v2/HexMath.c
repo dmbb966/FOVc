@@ -288,7 +288,7 @@ void HexesBetweenAx (AxCoord origin, AxCoord target)
 	float coordX;
 	float coordY;
 
-	OffCoord result;
+	AxCoord result;
 
 	FloatCoord originF = AxHexIs(origin);
 	FloatCoord targetF = AxHexIs(target);
@@ -303,7 +303,7 @@ void HexesBetweenAx (AxCoord origin, AxCoord target)
 		coordX = (float)originF.x + dx * progress;
 		coordY = (float)originF.y + dy * progress;
 
-		result = OffHexAt(coordX, coordY);
+		result = AxHexAt(coordX, coordY);
 
 		//printf ("Interpolating %d of %d: (%0.2f, %0.2f) is hex (%d, %d)\n",
 		//		i, distance, coordX, coordY, result.x, result.y);
@@ -322,7 +322,7 @@ void HexesBetweenCube (CubeCoord origin, CubeCoord target)
 	float coordX;
 	float coordY;
 
-	OffCoord result;
+	CubeCoord result;
 
 	FloatCoord originF = CubeHexIs(origin);
 	FloatCoord targetF = CubeHexIs(target);
@@ -337,7 +337,7 @@ void HexesBetweenCube (CubeCoord origin, CubeCoord target)
 		coordX = (float)originF.x + dx * progress;
 		coordY = (float)originF.y + dy * progress;
 
-		result = OffHexAt(coordX, coordY);
+		result = CubeHexAt(coordX, coordY);
 
 		//printf ("Interpolating %d of %d: (%0.2f, %0.2f) is hex (%d, %d)\n",
 		//		i, distance, coordX, coordY, result.x, result.y);
